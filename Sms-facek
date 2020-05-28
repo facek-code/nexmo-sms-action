@@ -1,0 +1,19 @@
+name: Issue
+on:
+  issues:
+    types: [labeled]
+jobs:
+  send-sms:
+    name: Send SMS
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send SMS
+      uses: nexmo-community/nexmo-sms-action@master
+      env:
+        NEXMO_API_KEY: ${{ secrets.NEXMO_API_KEY }}
+        NEXMO_API_SECRET: ${{ secrets.NEXMO_API_SECRET }}
+      with:
+        nexmoNumber: ${{ secrets.NEXMO_NUMBER }}
+        recipientNumber: ${{ secrets.RECIPIENT_NUMBER }}
+        message: "This urgent issue needs your attention: ${{ github.event.issue.html_url }}"
+      if: github.event.label.name == 'urgent'
